@@ -34,6 +34,8 @@ jobs:
           curl -s -H 'Authorization: Bearer Oracle' http://169.254.169.254/opc/v2/instance/ \
             | python3 -c 'import json,sys; d=json.load(sys.stdin); print("shape", d["shape"], d.get("shapeConfig"))'
           df -h / | tail -1
+          sudo -n cloud-init analyze blame 2>/dev/null | head -8 || true
+          systemd-analyze 2>/dev/null | head -1 || true
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:

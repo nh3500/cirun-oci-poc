@@ -1,0 +1,33 @@
+# OCI E5.Flex runners in ap-tokyo-1. Three variants probe how Cirun passes the Flex shape size.
+runners:
+  - name: oci-e5-camel
+    cloud: oracle
+    region: ap-tokyo-1
+    instance_type: VM.Standard.E5.Flex
+    machine_image: ocid1.image.oc1.ap-tokyo-1.aaaaaaaafg27dss6n2mj4bbkfmaygeabtha6ani4cczr52zve32xlshx72xq
+    labels:
+      - cirun-oci-camel
+    extra_config:
+      shapeConfig:
+        ocpus: 2
+        memoryInGBs: 16
+
+  - name: oci-e5-snake
+    cloud: oracle
+    region: ap-tokyo-1
+    instance_type: VM.Standard.E5.Flex
+    machine_image: ocid1.image.oc1.ap-tokyo-1.aaaaaaaafg27dss6n2mj4bbkfmaygeabtha6ani4cczr52zve32xlshx72xq
+    labels:
+      - cirun-oci-snake
+    extra_config:
+      shape_config:
+        ocpus: 2
+        memory_in_gbs: 16
+
+  - name: oci-e5-default
+    cloud: oracle
+    region: ap-tokyo-1
+    instance_type: VM.Standard.E5.Flex
+    machine_image: ocid1.image.oc1.ap-tokyo-1.aaaaaaaafg27dss6n2mj4bbkfmaygeabtha6ani4cczr52zve32xlshx72xq
+    labels:
+      - cirun-oci-default

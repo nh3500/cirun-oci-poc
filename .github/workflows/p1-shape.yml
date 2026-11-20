@@ -1,0 +1,23 @@
+name: p1-shape
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [camel, snake, default]
+    runs-on: cirun-oci-${{ matrix.variant }}--${{ github.run_id }}
+    timeout-minutes: 15
+    steps:
+      - name: probe
+        run: |
+          echo "job_start=$(date -u +%FT%TZ) vm_boot=$(uptime -s)"
+          echo "nproc=$(nproc)"
+          free -g | head -2
+          lscpu | grep -E 'Model name'
+          curl -s -H 'Authorization: Bearer Oracle' http://169.254.169.254/opc/v2/instance/ \
+            | python3 -c 'import json,sys; d=json.load(sys.stdin); print("shape", d["shape"], d.get("shapeConfig"), d["availabilityDomain"])'
+          df -h / | tail -1

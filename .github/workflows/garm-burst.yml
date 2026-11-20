@@ -1,0 +1,48 @@
+name: garm-burst
+on:
+  workflow_dispatch:
+    inputs:
+      n:
+        description: parallel jobs (1 = shape probe, 18 = burst)
+        default: "1"
+permissions:
+  contents: read
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      idx: ${{ steps.s.outputs.idx }}
+    steps:
+      - id: s
+        env:
+          N: ${{ inputs.n }}
+        run: echo "idx=$(python3 -c "import json,os; print(json.dumps(list(range(int(os.environ['N'])))))")" >> "$GITHUB_OUTPUT"
+
+  burst:
+    needs: plan
+    strategy:
+      fail-fast: false
+      matrix:
+        i: ${{ fromJSON(needs.plan.outputs.idx) }}
+    runs-on: garm-oci-e5
+    timeout-minutes: 20
+    steps:
+      - name: probe
+        run: |
+          echo "job_start=$(date -u +%FT%TZ) vm_boot=$(uptime -s 2>/dev/null || echo n/a)"
+          echo "nproc=$(nproc)"; free -g | head -2; lscpu | grep -E 'Model name'
+          curl -s -H 'Authorization: Bearer Oracle' http://169.254.169.254/opc/v2/instance/ \
+            | python3 -c 'import json,sys; d=json.load(sys.stdin); print("shape", d["shape"], d.get("shapeConfig"))'
+          df -h / | tail -1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: clone a medium repo (GitHub egress)
+        run: |
+          s=$(date +%s.%N); git clone -q --depth 1 https://github.com/vitejs/vite /tmp/vite
+          echo "clone_sec=$(python3 -c "print(round($(date +%s.%N)-$s,1))") size=$(du -sh /tmp/vite | cut -f1)"
+      - name: cpu
+        run: |
+          openssl speed -seconds 3 sha256 2>/dev/null | tail -1
+          openssl speed -seconds 3 -multi "$(nproc)" sha256 2>/dev/null | tail -1

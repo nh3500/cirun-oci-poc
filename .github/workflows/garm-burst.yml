@@ -34,7 +34,9 @@ jobs:
           curl -s -H 'Authorization: Bearer Oracle' http://169.254.169.254/opc/v2/instance/ \
             | python3 -c 'import json,sys; d=json.load(sys.stdin); print("shape", d["shape"], d.get("shapeConfig"))'
           df -h / | tail -1
-          sudo -n cloud-init analyze blame 2>/dev/null | head -8 || true
+          echo "HOME=$HOME GITHUB_WORKSPACE=$GITHUB_WORKSPACE RUNNER_TOOL_CACHE=$RUNNER_TOOL_CACHE"
+          echo "fonts=$(fc-list 2>/dev/null | wc -l) emoji=$(fc-match emoji 2>/dev/null) sans=$(fc-match sans-serif 2>/dev/null)"
+          sudo -n cloud-init analyze blame 2>/dev/null | head -12 || true
           systemd-analyze 2>/dev/null | head -1 || true
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [camel, snake, default]
+        variant: [xflat, xcamel, xlaunch, topoc, topcpu]
     runs-on: cirun-oci-${{ matrix.variant }}--${{ github.run_id }}
     timeout-minutes: 15
     steps:

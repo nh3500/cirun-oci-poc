@@ -1,33 +1,57 @@
-# OCI E5.Flex runners in ap-tokyo-1. Three variants probe how Cirun passes the Flex shape size.
+# Round 2: more guesses for passing the E5.Flex size (round 1: extra_config.shapeConfig and
+# extra_config.shape_config were both ignored; VMs came up 1 OCPU / 4 GB).
 runners:
-  - name: oci-e5-camel
+  - name: oci-e5-xflat
     cloud: oracle
     region: ap-tokyo-1
     instance_type: VM.Standard.E5.Flex
     machine_image: ocid1.image.oc1.ap-tokyo-1.aaaaaaaafg27dss6n2mj4bbkfmaygeabtha6ani4cczr52zve32xlshx72xq
     labels:
-      - cirun-oci-camel
+      - cirun-oci-xflat
     extra_config:
-      shapeConfig:
-        ocpus: 2
-        memoryInGBs: 16
+      ocpus: 2
+      memory_in_gbs: 16
 
-  - name: oci-e5-snake
+  - name: oci-e5-xcamel
     cloud: oracle
     region: ap-tokyo-1
     instance_type: VM.Standard.E5.Flex
     machine_image: ocid1.image.oc1.ap-tokyo-1.aaaaaaaafg27dss6n2mj4bbkfmaygeabtha6ani4cczr52zve32xlshx72xq
     labels:
-      - cirun-oci-snake
+      - cirun-oci-xcamel
     extra_config:
-      shape_config:
-        ocpus: 2
-        memory_in_gbs: 16
+      ocpus: 2
+      memoryInGBs: 16
 
-  - name: oci-e5-default
+  - name: oci-e5-xlaunch
     cloud: oracle
     region: ap-tokyo-1
     instance_type: VM.Standard.E5.Flex
     machine_image: ocid1.image.oc1.ap-tokyo-1.aaaaaaaafg27dss6n2mj4bbkfmaygeabtha6ani4cczr52zve32xlshx72xq
     labels:
-      - cirun-oci-default
+      - cirun-oci-xlaunch
+    extra_config:
+      launch_instance_details:
+        shape_config:
+          ocpus: 2
+          memory_in_gbs: 16
+
+  - name: oci-e5-topoc
+    cloud: oracle
+    region: ap-tokyo-1
+    instance_type: VM.Standard.E5.Flex
+    machine_image: ocid1.image.oc1.ap-tokyo-1.aaaaaaaafg27dss6n2mj4bbkfmaygeabtha6ani4cczr52zve32xlshx72xq
+    labels:
+      - cirun-oci-topoc
+    ocpus: 2
+    memory_in_gbs: 16
+
+  - name: oci-e5-topcpu
+    cloud: oracle
+    region: ap-tokyo-1
+    instance_type: VM.Standard.E5.Flex
+    machine_image: ocid1.image.oc1.ap-tokyo-1.aaaaaaaafg27dss6n2mj4bbkfmaygeabtha6ani4cczr52zve32xlshx72xq
+    labels:
+      - cirun-oci-topcpu
+    cpu: 4
+    memory: 16
